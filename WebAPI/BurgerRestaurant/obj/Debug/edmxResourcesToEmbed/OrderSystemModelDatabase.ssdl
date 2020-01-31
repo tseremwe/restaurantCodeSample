@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OrderSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Firstname" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Lastname" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Telephone" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Extra">
+    <Key>
+      <PropertyRef Name="ExtraID" />
+    </Key>
+    <Property Name="ExtraID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Price" Type="money" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="ItemID" />
+    </Key>
+    <Property Name="ItemID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Price" Type="money" Nullable="false" />
+    <Property Name="Extras" Type="bit" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'OrderSystem.dbo.ItemExtra' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="ItemExtra">
+    <Key>
+      <PropertyRef Name="ItemId" />
+      <PropertyRef Name="ExtraId" />
+    </Key>
+    <Property Name="ItemId" Type="int" Nullable="false" />
+    <Property Name="ExtraId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="OrderID" />
+    </Key>
+    <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerID" Type="int" Nullable="false" />
+    <Property Name="Completed" Type="bit" Nullable="false" />
+    <Property Name="Cancelled" Type="bit" Nullable="false" />
+    <Property Name="TotalPrice" Type="money" Nullable="false" />
+    <Property Name="Tax" Type="money" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="MonthYear" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrderDetail">
+    <Key>
+      <PropertyRef Name="OrderDetailID" />
+    </Key>
+    <Property Name="OrderDetailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderID" Type="int" Nullable="false" />
+    <Property Name="OrderItemID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrderItem">
+    <Key>
+      <PropertyRef Name="OrderItemID" />
+    </Key>
+    <Property Name="OrderItemID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemID" Type="int" Nullable="false" />
+    <Property Name="ExtraID" Type="int" />
+  </EntityType>
+  <EntityContainer Name="OrderSystemModelStoreContainer">
+    <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Extra" EntityType="Self.Extra" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrderItem" EntityType="Self.OrderItem" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemExtra" EntityType="Self.ItemExtra" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [ItemExtra].[ItemId] AS [ItemId], 
+    [ItemExtra].[ExtraId] AS [ExtraId]
+    FROM [dbo].[ItemExtra] AS [ItemExtra]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

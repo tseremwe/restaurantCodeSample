@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OrderSystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Telephone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Extra">
+    <Key>
+      <PropertyRef Name="ExtraID" />
+    </Key>
+    <Property Name="ExtraID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="ItemID" />
+    </Key>
+    <Property Name="ItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Extras" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="OrderID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="Completed" Type="Boolean" Nullable="false" />
+    <Property Name="Cancelled" Type="Boolean" Nullable="false" />
+    <Property Name="TotalPrice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Tax" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="MonthYear" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrderItem">
+    <Key>
+      <PropertyRef Name="OrderItemID" />
+    </Key>
+    <Property Name="OrderItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemID" Type="Int32" Nullable="false" />
+    <Property Name="ExtraID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="ItemExtra">
+    <Key>
+      <PropertyRef Name="ItemId" />
+      <PropertyRef Name="ExtraId" />
+    </Key>
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="ExtraId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrderDetail">
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <Property Name="OrderItemID" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="OrderSystemEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="Extras" EntityType="Self.Extra" />
+    <EntitySet Name="Items" EntityType="Self.Item" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
+    <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
+    <EntitySet Name="ItemExtras" EntityType="Self.ItemExtra" />
+    <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+  </EntityContainer>
+</Schema>
