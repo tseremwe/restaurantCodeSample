@@ -1,0 +1,159 @@
+<h2 class="content-block">Welcome to <b>Yummy Chow</b></h2>
+<div class="content-block">
+    <div class="dx-card responsive-paddings">
+    <form (submit)="onFormSubmit($event, firstname.value, lastname.value, telephone.value, address.value)">
+        <div class="dx-fieldset">
+            <div class="dx-fieldset-header">Customer Information </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Firstname</div>
+                <div class="dx-field-value">
+                    <dx-text-box #firstname> 
+                        <dx-validator>
+                            <dxi-validation-rule type="required" message="Firstname is required"></dxi-validation-rule>
+                        </dx-validator>
+                    </dx-text-box>
+                </div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Lastname</div>
+                <div class="dx-field-value">
+                    <dx-text-box #lastname> 
+                        <dx-validator>
+                            <dxi-validation-rule type="required" message="Lastname is required"></dxi-validation-rule>
+                        </dx-validator>
+                    </dx-text-box>
+                </div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Telephone</div>
+                <div class="dx-field-value">
+                    <dx-text-box #telephone > 
+                        <dx-validator>
+                            <dxi-validation-rule type="required" message="telephone is required"></dxi-validation-rule>
+                        </dx-validator>
+                    </dx-text-box>
+                </div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Address</div>
+                <div class="dx-field-value">
+                    <dx-text-box #address> 
+                        <dx-validator>
+                            <dxi-validation-rule type="required" message="Address is required"></dxi-validation-rule>
+                        </dx-validator>
+                    </dx-text-box>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!showItems">
+        <div class="dx-fieldset">
+            <dx-validation-summary id="summary"></dx-validation-summary>
+            <dx-button 
+                id="button"
+                text="Proceed to Order"
+                type="default"  
+                [useSubmitBehavior]="true">
+            </dx-button>
+    </div>
+</div>
+</form>
+<div *ngIf="showItems">
+<div class="dx-card responsive-paddings">
+    <div class="dx-fieldset">
+        <div class="dx-field">
+            <div class="dx-field-label">Select a Menu Item</div>
+            <div class="dx-field-value">
+                <dx-select-box #itemSelectBox [items]="items"  
+                displayExpr="Name"
+                valueExpr="ItemID"
+                (onSelectionChanged)="itemSelected($event)"></dx-select-box>
+            </div>
+        </div>
+        <div *ngIf="showExtras">
+            <div class="dx-field-label">Extras</div>
+            <div class="dx-field-value">
+                <dx-tag-box
+                    [dataSource]="extras"
+                    displayExpr="Name"
+                    valueExpr="ExtraID"
+                    placeholder="Choose Extras..."
+                    (onSelectionChanged)="extrasChanged($event)">
+                </dx-tag-box>
+            </div>
+        </div>
+        <div *ngIf="showPrice">
+            <div class="dx-field-label">Item Price:</div>
+            <div class="dx-field-value">
+                <dx-number-box
+                format="$ #,##0.00"
+                [value]="itemPrice"
+                [readOnly]="true"
+            ></dx-number-box>
+            </div>
+            <dx-button id="button"
+                text="Add to Order"
+                type="default"  
+                (onClick)="addToOrder()">
+            </dx-button>
+  
+        </div>
+
+        <div *ngIf="showOrder">
+            <div class="dx-field-label">Order Summary:</div>
+            <dx-data-grid id="gridContainer"
+                [dataSource]="selectedItems"
+                [masterDetail]="{ enabled: true, template: 'detail' }"
+                keyExpr="ItemID"
+                [showBorders]="true">
+
+                <dxi-column dataField="Name" caption="Item"></dxi-column>
+                <dxi-column dataField="TotalPrice" caption="Price" [customizeText]="CurrencyFormatter"></dxi-column>
+                
+                <div *dxTemplate="let item of 'detail'">
+                    <div *ngIf="item.data.Extras">
+                    <div class="master-detail-caption">{{item.data.Name + " Extras:"}}</div>
+                    <dx-data-grid 
+                        [dataSource]="getExtras(item.ItemID)"
+                        [showBorders]="true"
+                        [columnAutoWidth]="true">
+                            <dxi-column dataField="Name"></dxi-column>
+                            <dxi-column dataField="Price"></dxi-column>
+                    </dx-data-grid>       
+                </div>
+                <div *ngIf="!item.data.Extras">
+                    <div class="master-detail-caption">{{"This item has no Extras"}}</div>
+                </div>
+                </div>      
+                <dxo-summary [calculateCustomSummary]="calculateTotalWithTax">
+                    <dxi-total-item
+                    name="TotalSummary"
+                    summaryType="custom"
+                    valueFormat="currency"
+                    displayFormat="Total Incl. Tax: {0}"
+                    showInColumn="TotalPrice"
+                    [customizeText]="SummaryFormatter">
+                    </dxi-total-item>
+                </dxo-summary>
+                <dxo-editing 
+                mode="row"
+                [allowDeleting]="true"
+                >
+           </dxo-editing>
+           
+            </dx-data-grid>
+            <dx-button id="button"
+                text="Complete"
+                type="success"  
+                (onClick)="completeOrder()">
+            </dx-button>
+            <dx-button id="button"
+            text="Cancel"
+            type="danger"  
+            (onClick)="cancelOrder()">
+        </dx-button>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+</div>
