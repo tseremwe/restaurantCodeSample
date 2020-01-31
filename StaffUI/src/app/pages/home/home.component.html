@@ -1,0 +1,91 @@
+<h2 class="content-block">Welcome to <b>Yummy Chow</b> </h2>
+<div class="content-block">
+    <div  class="dx-card responsive-paddings">
+        <dx-chart id="orders-chart">
+            <dxo-common-series-settings type="bar"></dxo-common-series-settings>
+            <dxo-size [height]="200"></dxo-size>
+            <dxo-adaptive-layout [width]="450"></dxo-adaptive-layout>
+            <dxo-tooltip [enabled]="true" format="currency" [customizeTooltip]="customizeTooltip"></dxo-tooltip>
+          </dx-chart>
+        
+          <dx-pivot-grid id="pivotgrid"
+            [allowSortingBySummary]="true"
+            [allowFiltering]="true"
+            [showBorders]="true"
+            [allowSortingBySummary]="true"
+            [showColumnGrandTotals]="false"
+            [showRowGrandTotals]="false"
+            [showRowTotals]="false"
+            [showColumnTotals]="false"
+            [dataSource]="pivotGridDataSource">
+            <dxo-field-chooser [enabled]="true" [height]="400"></dxo-field-chooser>
+            <dxo-scrolling mode="virtual"></dxo-scrolling>
+          </dx-pivot-grid>
+    </div>
+    <div class="dx-card responsive-paddings">
+        <dx-data-grid id="gridContainer"
+        [dataSource]="orderHistoryItems"
+        [remoteOperations]="false"
+        [allowColumnReordering]="true"
+        [rowAlternationEnabled]="true"
+        [showBorders]="true">
+        <dxo-export [enabled]="true" fileName="Orders" [allowExportSelectedData]="true"></dxo-export>
+        <dxo-selection mode="multiple"></dxo-selection>
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+        <dxo-header-filter 
+        [visible]="true"></dxo-header-filter>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[10, 25, 50, 100]"
+        ></dxo-pager>
+        <dxo-search-panel
+            [visible]="true"
+            [highlightCaseSensitive]="true"
+        ></dxo-search-panel>
+        <dxo-group-panel
+            [visible]="true"
+        ></dxo-group-panel>
+        <dxo-grouping
+            [autoExpandAll]="false"
+        ></dxo-grouping>
+        <dxo-summary  [calculateCustomSummary]="calculateMonthlyTax">
+            <dxi-group-item
+                column="CustomerID"
+                summaryType="count"
+                displayFormat="{0} orders">
+            </dxi-group-item>
+            <dxi-group-item
+                column="TotalPrice"
+                summaryType="sum"
+                valueFormat="currency"
+                displayFormat="Total: {0}"
+                [customizeText]="SummaryFormatter"
+                [showInGroupFooter]="true">
+            </dxi-group-item>
+                <dxi-group-item
+                name="TaxSummary"
+                summaryType="custom"
+                valueFormat="currency"
+                displayFormat="Total Tax  To Pay: {0}"
+                showInColumn="TotalPrice"
+                [customizeText]="TaxSummaryFormatter"
+                [showInGroupFooter]="true">
+                </dxi-group-item>
+        </dxo-summary>
+        <dxi-column dataField="MonthYear" [groupIndex]="0" Caption="Month"></dxi-column>
+        <dxi-column dataField="CustomerID" caption="Customer Name" dataType="string"><dxo-lookup 
+            [dataSource]="customers"
+            valueExpr="CustomerID"
+            displayExpr="Lastname">
+        </dxo-lookup></dxi-column>
+        <dxi-column dataField="Date" dataType="date"></dxi-column>
+        <dxi-column dataField="Cancelled"></dxi-column>
+        <dxi-column dataField="Completed"></dxi-column>
+        <dxi-column dataField="TotalPrice" format="$ #,##0.00"></dxi-column>
+
+        
+    </dx-data-grid>
+    
+    </div>
+</div>
